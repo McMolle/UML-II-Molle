@@ -10,7 +10,7 @@ namespace UML_II_Molle
     public class Pizza
     {
         public string PizzaName;
-        public DietType DietaryInfo;
+        public DietType Diet;
         public double Price;
         public Recipe _Recipe;
 
@@ -19,7 +19,7 @@ namespace UML_II_Molle
         {
             PizzaName = name;
             _Recipe = recipe;
-            DietaryInfo = recipe.Diet;
+            Diet = recipe.Diet;
             Price = price;
         }        
 
@@ -31,7 +31,7 @@ namespace UML_II_Molle
 
         public override string ToString()
         {
-            return $"{PizzaName}, {Price} DKK ({DietaryInfo}).";
+            return $"{PizzaName}, {Price} DKK ({Diet}).";
         }
     }
 }

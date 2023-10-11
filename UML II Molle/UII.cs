@@ -8,7 +8,7 @@ namespace UML_II_Molle
 {
     public static class UII
     {
-        private static Menu _menu;
+        private static Menu? _menu;
 
         public static void CacheMenu(Menu menu)
         {
@@ -24,23 +24,47 @@ namespace UML_II_Molle
                 switch (inp)
                 {
                     case "1":
-                        PrintMenu(_menu.AllPizzas); 
+                        if (_menu != null)
+                        {
+                            PrintMenu();
+                        }
+                        else { CustomError("Menu:", "Can't show menu - Menu is null."); }
                         break;
-
+                    case "2":
+                        // program GetMenu SearchMenu?.Invoke????
+                        break;
+                    case "3":
+                        //CreateNewPizza
+                        break;
+                    case "4":
+                        //EditExistingPizza
+                        break;
+                    case "5":
+                        //ShowAllPizzasInSystem
+                        break;
+                    default:
+                        Console.WriteLine("-");
+                        break;
 
                 }
             }
         }
 
-        public static void PrintMenu(List<Pizza> pizzas)
+        public static void PrintMenu()
         {
             Console.WriteLine("Menu: ");
+            List<Pizza> pizzas = _menu.AllPizzas;
 
             for (int i = 0; i < pizzas.Count; i++)
             {
                 Console.WriteLine($"{i}. {pizzas[i]}");
 
             }
+        }
+
+        public static void SearchMenu()
+        {
+            Console.WriteLine("Search Menu:\n");
         }
 
         public static void SearchedMenuResults()

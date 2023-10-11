@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1706.4
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UML II Molle", "UML II Molle\UML II Molle.csproj", "{B51A9D68-B9A7-4239-8343-3A4E1CD43F81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UML II Molle", "UML II Molle\UML II Molle.csproj", "{B51A9D68-B9A7-4239-8343-3A4E1CD43F81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UML II Tester", "UML II Tester\UML II Tester.csproj", "{9B97669C-A7C2-4335-BF9F-D6EF238072DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B51A9D68-B9A7-4239-8343-3A4E1CD43F81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B51A9D68-B9A7-4239-8343-3A4E1CD43F81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B51A9D68-B9A7-4239-8343-3A4E1CD43F81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B97669C-A7C2-4335-BF9F-D6EF238072DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B97669C-A7C2-4335-BF9F-D6EF238072DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B97669C-A7C2-4335-BF9F-D6EF238072DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B97669C-A7C2-4335-BF9F-D6EF238072DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

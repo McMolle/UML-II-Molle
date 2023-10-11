@@ -8,6 +8,7 @@ namespace UML_II_Molle
 {
     public class Menu
     {
+
         public List<Pizza> MenuPizzas = new List<Pizza>();
 
 
@@ -15,6 +16,7 @@ namespace UML_II_Molle
         {
 
         }
+        
 
         public void AddPizza(Pizza px)
         {
@@ -24,15 +26,25 @@ namespace UML_II_Molle
         public string SearchMenu(string input)
         {
             string r = string.Empty;
-            var results = MenuPizzas.Where(pizza => pizza.PizzaName.ToLower().Contains(input.ToLower()));
-            if (results.Count() > 0)
+            var nameResults = MenuPizzas.Where(pizza => pizza.PizzaName.ToLower().Contains(input.ToLower()));
+            var dietResults = MenuPizzas.Where(pizza => pizza.Diet.ToString().ToLower().Contains(input.ToLower()));
+            if (nameResults.Count() > 0)
             {
-                foreach (var pizza in results)
+                foreach (var pizza in nameResults)
                 {
                     r += pizza.ToString() + "\n";
                 }
+                r = "Name Matches:\n" + r;
             }
-            return "Name matches:\n" + r;
+            if (dietResults.Count() > 0)
+            {
+                foreach (var pizza in dietResults)
+                {
+                    r += pizza.ToString() + "\n";
+                }
+                r = "Diet Matches:\n" + r;
+            }
+            return r;
         }
 
         
