@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UML_II_Molle
 {
-    public enum DietType { Vegan, Vegetarian, NonVegetarian}
+    public enum DietType { Vegan, Vegetarian, Standard}
     public class Recipe
     {
         public string Name { get; set; }
@@ -35,16 +35,16 @@ namespace UML_II_Molle
 
             if(vgC + vC + nv == Ingredients.Count)
             {
-                if (nv > 0) { return DietType.NonVegetarian; }
+                if (nv > 0) { return DietType.Standard; }
                 else if (nv == 0)
                 {
                     if (vC > 0) { return DietType.Vegetarian; }
                     else if (vgC == Ingredients.Count) { return DietType.Vegan; }
-                    else { return DietType.NonVegetarian; }
+                    else { return DietType.Standard; }
                 }
-                else { return DietType.NonVegetarian; }
+                else { return DietType.Standard; }
             }
-            else { return DietType.NonVegetarian; }
+            else { return DietType.Standard; }
         }
     }
 }

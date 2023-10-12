@@ -28,6 +28,26 @@ namespace UML_II_Molle
 
         }
 
+        public string FurtherDetails()
+        {
+
+            if (_Recipe != null)
+            {
+                string d = string.Empty;
+                foreach (Ingredient i in _Recipe.Ingredients)
+                {
+                    d += i.Name;
+                    if (i.Name.Length < 8) { d += "\t"; }
+
+                    if (!i.VeganComp && !i.VegetarianComp) { d += "\t-\n"; }
+                    else if (i.VegetarianComp && !i.VeganComp) { d += "\tVegetarian\n"; }
+                    else if (i.VeganComp) { d += "\tVegan\n"; }
+                    else { d += "\tcant get ingredient dietinfo\n"; }
+                }
+                return d;
+            }
+            else return "Can't fetch recipe for" + this.PizzaName;
+        }
 
         public override string ToString()
         {
