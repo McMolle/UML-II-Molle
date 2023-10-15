@@ -26,18 +26,14 @@ namespace UML_II_Molle
                 switch (inp)
                 {
                     case "1":
-                        if (_menu != null)
                         {
                             PrintMenu();
                         }
-                        else { CustomError("Menu:", "Can't show menu - Menu is null."); }
                         break;
                     case "2":
-                        if (_menu != null)
                         {
                             SearchMenu();
                         }
-                        else { CustomError("Menu:", "Can't search in menu - Menu is null."); }
                         break;
                     case "3":
                         //CreateNewPizza
@@ -60,42 +56,42 @@ namespace UML_II_Molle
         {
             Header();
             Console.WriteLine("Menu: ");
-            List<Pizza> pizzas = _menu.AllPizzas;
+            if (_menu != null) {
+                List<Pizza> pizzas = _menu.AllPizzas;
 
-            for (int i = 0; i < pizzas.Count; i++)
-            {
-                Console.WriteLine($"{i}. {pizzas[i]}");
 
-            }
-            Console.WriteLine("\n\n(1). Return to main menu\n(2). Edit existing Pizza \n(3). Create new Pizza\n(4). Expand details");
-            Footer();
+                for (int i = 0; i < pizzas.Count; i++) {
+                    Console.WriteLine($"{i}. {pizzas[i]}");
 
-            var inp = Console.ReadLine();
-            if (inp != null)
-            {
-                switch (inp)
-                {
-                    case "1":
-                        StartScreen();
-                        break;
-                    case "2":
-                        //Edit pizza
-                        break;
-                    case "3":
-                        break;
-                    case "4":
-                        Header();
-                        foreach (Pizza p in _menu.AllPizzas)
-                        {
-                            Console.WriteLine($"{p}\nIngredients\n{p.FurtherDetails()}\n\n");
-                        }
-                        Footer();
-                        break;
-                    default:
-                        break;
                 }
-            }
+                Console.WriteLine("\n\n(1). Return to main menu\n(2). Edit existing Pizza \n(3). Create new Pizza\n(4). Expand details");
+                Footer();
 
+                var inp = Console.ReadLine();
+                if (inp != null) {
+                    switch (inp) {
+                        case "1":
+                            StartScreen();
+                            break;
+                        case "2":
+                            //Edit pizza
+                            break;
+                        case "3":
+                            break;
+                        case "4":
+                            Header();
+                            foreach (Pizza p in _menu.AllPizzas) {
+                                Console.WriteLine($"{p}\nIngredients\n{p.FurtherDetails()}\n\n");
+                            }
+                            Footer();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            }
+            else { CustomError("Menu:", "Can't show menu - Menu is null."); }
         }
 
         public static void SearchMenu()
@@ -110,7 +106,7 @@ namespace UML_II_Molle
                 {
                     results = _menu.SearchMenu(inp);
                 }
-                else CustomError("Search Menu:", "No menu to search."); 
+                else { CustomError("Menu:", "Can't search in menu - Menu is null."); }
             }
             else CustomError("Search Menu:", "Invalid search term.");
 
