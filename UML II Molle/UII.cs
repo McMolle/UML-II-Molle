@@ -1,18 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UML_II_Molle
 {
     public static class UII
     {
         private static Menu? _menu;
+        private static Recipe? _ingredients;
 
         public static void CacheMenu(Menu menu)
         {
             _menu = menu;
+        }
+
+        public static void CacheIngredientRepo(Recipe recipe)
+        {
+            _ingredients = recipe;
         }
 
         public static void StartScreen()
@@ -32,11 +40,12 @@ namespace UML_II_Molle
                         break;
                     case "2":
                         {
+                            Header();
                             SearchMenu();
                         }
                         break;
                     case "3":
-                        //CreateNewPizza
+                        CreatePizza();
                         break;
                     case "4":
                         //EditExistingPizza
@@ -96,7 +105,6 @@ namespace UML_II_Molle
 
         public static void SearchMenu()
         {
-            Header();
             Console.WriteLine("Search Menu:\n");
             var inp = Console.ReadLine();
             string results = string.Empty;
@@ -108,13 +116,18 @@ namespace UML_II_Molle
                 }
                 else { CustomError("Menu:", "Can't search in menu - Menu is null."); }
             }
-            else CustomError("Search Menu:", "Invalid search term.");
+            else CustomError("Search Menu:", "Input is null.");
 
             if (results != string.Empty)
             {
                 SearchedMenuResults(results);
             }
-            else CustomError("Search Menu:", "Imput not null, Menu not null, but results = string.empty.");
+            else
+            {
+                Console.WriteLine("No search results.");
+                Footer();
+                SearchMenu();
+            }
         }
 
         public static void SearchedMenuResults(string r)
@@ -123,11 +136,75 @@ namespace UML_II_Molle
             Console.WriteLine(r);
             Footer();
         }
-        public static void BasicSegment(string s)
+
+        public static void CreatePizza()
         {
             Header();
-            Console.WriteLine(s);
+            Console.WriteLine("Creating new pizza; Type in all ingredients to add to pizza:");
+            Console.WriteLine("Ingredients:");
+            if (_ingredients != null)
+            {
+                List<Ingredient> tIngr = new List<Ingredient>();
+
+
+                for (int i = 0; i < _ingredients.Ingredients.Count; i++)
+                {
+                    Console.WriteLine($"{i}:\t{_ingredients.Ingredients[i]}");
+                }
+                Footer();
+                var inp = Console.ReadLine();
+                if (inp != null)
+                {
+                    foreach (char c in inp)
+                    {
+                        if (_ingredients.Ingredients[c] != null)
+                        {
+                            tIngr.Add(_ingredients.Ingredients[c]);
+                        }
+                    }
+                    CreatePizzaTwo(tIngr);
+                }
+            }
+        }
+
+
+        public static void CreatePizzaTwo(List<Ingredient> ingrAdded)
+        {
+            string tName;
+            int tPrice;
+            int parser;
+            Header();
+            Console.WriteLine("Your pizza:");
+            if (ingrAdded != null)
+            {
+                foreach (Ingredient ing in ingrAdded)
+                {
+                    Console.WriteLine($"({ingrAdded.IndexOf(ing)}). {ing}");
+                }
+            }
             Footer();
+            Console.WriteLine("Name this pizza:");
+            var pni = Console.ReadLine();
+            if (pni != null)
+            {
+                tName = pni;
+            }
+            Console.WriteLine("Set the price:");
+            var pnp = Console.ReadLine();
+            if (pnp != null)
+            {
+                if (Int32.TryParse(pnp, out parser))
+                {
+                    tPrice = parser;
+                }
+                else Console.WriteLine("Invalid Price");
+            }
+
+            else
+            {
+                Console.WriteLine("No ingredients in system.");
+                Footer();
+            }
         }
 
         public static void Header()
@@ -136,27 +213,31 @@ namespace UML_II_Molle
             Console.WriteLine("================================");
         }
 
-        public static void Footer()
+        public static void Header(string msg)
         {
-            Console.WriteLine("\n\n\n");
+            Console.WriteLine(msg);
             Console.WriteLine("================================");
-            Console.WriteLine("                _....._\r");
-            Console.WriteLine("            _.:`.--|--.`:._\r");
-            Console.WriteLine("          .: .'\\o  | o /'. '.\r");
-            Console.WriteLine("         // '.  \\ o|  /  o '.\\\r");
-            Console.WriteLine("        //'._o'. \\ |o/ o_.-'o\\\\\r");
-            Console.WriteLine("        || o '-.'.\\|/.-' o   ||\r");
-            Console.WriteLine("        ||--o--o-->|<--o--o--\r");
-            Console.WriteLine("            ________ ___,,,,,,,\r");
-            Console.WriteLine("           [________>__________\\\r");
-            Console.WriteLine("");
-            Console.WriteLine("            ________   .===-\r");
-            Console.WriteLine("           [________>c((_==-\r");
-            Console.WriteLine("                       '===-\r");
-
         }
 
-      
+        public static void Footer()
+        {
+            Console.WriteLine("\n================================");
+            //Console.WriteLine("            _....._\r");
+            //Console.WriteLine("        _.:`.--|--.`:._\r");
+            //Console.WriteLine("      .: .'\\o  | o /'. '.\r");
+            //Console.WriteLine("     // '.  \\ o|  /  o '.\\\r");
+            //Console.WriteLine("    //'._o'. \\ |o/ o_.-'o\\\\\r");
+            //Console.WriteLine("    || o '-.'.\\|/.-' o   ||\r");
+            //Console.WriteLine("    ||--o--o-->|<--o--o--\r");
+            //Console.WriteLine("      ________ ___,,,,,,,\r");
+            //Console.WriteLine("     [________>__________\\\r");
+            //Console.WriteLine("      ________   .===-\r");
+            //Console.WriteLine("     [________>c((_==-\r");
+            //Console.WriteLine("                 '===-\r");
+            //Console.WriteLine("Input:");
+        }
+
+
 
         public static void CustomError(string obj, string details)
         {

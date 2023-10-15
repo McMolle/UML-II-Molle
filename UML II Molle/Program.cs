@@ -20,6 +20,10 @@ internal class Program
         Ingredient Cheese2 = new Ingredient("Vegan cheese", true, true);
         #endregion
 
+        #region Ingredient Repository-Recipe
+        List<Ingredient> ingrRepo = new List<Ingredient> { Dough, Tomatopaste, Pineapple, SmokedTofu, BbqSauce, Ham, Cheese1, Cheese2 };
+        #endregion
+
         #region Ingredient Lists & Recipes
         List<Ingredient> p1_rl = new List<Ingredient> { Dough, Tomatopaste, Cheese2 };                           //vegan
         List<Ingredient> p2_rl = new List<Ingredient> { Dough, Tomatopaste, Cheese2, Ham, Pineapple };           //non veg
