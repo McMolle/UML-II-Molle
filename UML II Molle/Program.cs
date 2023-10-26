@@ -22,6 +22,7 @@ internal class Program
 
         #region Ingredient Repository-Recipe
         List<Ingredient> ingrRepo = new List<Ingredient> { Dough, Tomatopaste, Pineapple, SmokedTofu, BbqSauce, Ham, Cheese1, Cheese2 };
+        Recipe _recipeAllIngr = new Recipe("RecipeAllIngr", ingrRepo);
         #endregion
 
         #region Ingredient Lists & Recipes
@@ -54,6 +55,7 @@ internal class Program
        
 
         UII.CacheMenu(menu1);
+        UII.CacheIngredientRepo(_recipeAllIngr);
         UII.StartScreen();
     }
 

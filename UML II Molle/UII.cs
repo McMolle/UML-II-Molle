@@ -13,6 +13,11 @@ namespace UML_II_Molle
         private static Menu? _menu;
         private static Recipe? _ingredients;
 
+        static string? tempName;
+        static int tempPrice;
+        static int parser;
+        static Dictionary<int, Pizza>? tempPizzaDictionary;
+
         public static void CacheMenu(Menu menu)
         {
             _menu = menu;
@@ -26,7 +31,7 @@ namespace UML_II_Molle
         public static void StartScreen()
         {
             Header();
-            Console.WriteLine("\n(1). Show Menu\n(2). Search Menu\n(3). Create new Pizza\n(4). Edit existing Pizza\n(5). Show all Pizzas in the system");
+            Console.WriteLine("\n(1). Show Menu\n(2). Search Menu\n(3). Create new Pizza\n");
             Footer();
             string? inp = Console.ReadLine();
             if (inp != null)
@@ -45,13 +50,9 @@ namespace UML_II_Molle
                         }
                         break;
                     case "3":
-                        CreatePizza();
-                        break;
-                    case "4":
-                        //EditExistingPizza
-                        break;
-                    case "5":
-                        //ShowAllPizzasInSystem
+                        {
+                            CreatePizza();
+                        }
                         break;
                     default:
                         Console.WriteLine("-");
@@ -73,7 +74,7 @@ namespace UML_II_Molle
                     Console.WriteLine($"{i}. {pizzas[i]}");
 
                 }
-                Console.WriteLine("\n\n(1). Return to main menu\n(2). Edit existing Pizza \n(3). Create new Pizza\n(4). Expand details");
+                Console.WriteLine("\n\n(1). Return to main menu\n(2). Edit Pizza \n(3). Create new Pizza\n(4). Delete a pizza\n(5). Expand details");
                 Footer();
 
                 var inp = Console.ReadLine();
@@ -83,16 +84,19 @@ namespace UML_II_Molle
                             StartScreen();
                             break;
                         case "2":
-                            //Edit pizza
+                            EditPizza_ChoosePizza();
                             break;
                         case "3":
                             break;
                         case "4":
+                            break;
+                        case "5":
                             Header();
                             foreach (Pizza p in _menu.AllPizzas) {
                                 Console.WriteLine($"{p}\nIngredients\n{p.FurtherDetails()}\n\n");
                             }
                             Footer();
+                            InputToReturn();
                             break;
                         default:
                             break;
@@ -101,6 +105,109 @@ namespace UML_II_Molle
 
             }
             else { CustomError("Menu:", "Can't show menu - Menu is null."); }
+        }
+
+        public static void EditPizza_ChoosePizza()
+        {
+            if (_menu == null) { return; }
+            else
+            {
+                Header();
+                tempPizzaDictionary = new Dictionary<int, Pizza>();
+                int i = 0;
+                foreach (Pizza pizza in _menu.AllPizzas)
+                {
+                    tempPizzaDictionary.Add(i, pizza );
+                    Console.WriteLine($"({i}). {pizza}");
+                    i++;
+                }
+                Footer();
+                Console.WriteLine("\nWhat pizza do you wish to edit?");
+                var inp = Console.ReadLine();
+                if (Int32.TryParse(inp, out parser)) {
+                    if (tempPizzaDictionary.ContainsKey(parser))
+                    {
+                        EditPizza_ChooseProperty(tempPizzaDictionary[parser]);
+                    }
+                }
+            }
+        }
+
+        public static void EditPizza_ChooseProperty(Pizza pizzaToEdit)
+        {
+            Header();
+            Console.WriteLine(pizzaToEdit.FurtherDetails());
+            Console.WriteLine("\n(1). Change pizza name\n(2). Change pizza price\n(3). Add ingredients\n(4). Remove ingredients");
+            Footer();
+            var editChoiceInput = Console.ReadLine();
+            switch (editChoiceInput)
+            {
+                case "1":
+                    EditPizzaName(pizzaToEdit);
+                    break;
+                case "2":
+                    EditPizzaPrice(pizzaToEdit);
+                    break;
+                case "3":
+                    EditPizza_AddIngredients(pizzaToEdit);
+                    break;
+                case "4":
+                    EditPizza_RemoveIngredients(pizzaToEdit);
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        public static void EditPizzaName(Pizza pizzaToEdit)
+        {
+            Header();
+            Console.WriteLine(pizzaToEdit.FurtherDetails());
+            Footer();
+            Console.WriteLine("What do you want to call this pizza?");
+            var newNameInp = Console.ReadLine();
+            if (newNameInp != null)
+            {
+                pizzaToEdit.EditPizza(newNameInp);
+                StartScreen();
+            }
+            else
+            {
+                CustomError("EditPizzaName;", "New name input is null");
+            }
+        }
+
+        public static void EditPizzaPrice(Pizza pizzaToEdit)
+        {
+            Header();
+            Console.WriteLine(pizzaToEdit.FurtherDetails());
+            Footer();
+            Console.WriteLine("What do you want this pizza to cost?");
+            var newPriceInp = Console.ReadLine();
+            if (newPriceInp != null && Int32.TryParse(newPriceInp, out parser))
+            {
+                pizzaToEdit.EditPizza(parser);
+                StartScreen();
+            }
+            else
+            {
+                CustomError("EditPizzaPrice;", "New price input is null");
+            }
+        }
+
+        public static void EditPizza_AddIngredients(Pizza pizzaToEdit)
+        {
+            Header();
+            Console.WriteLine(pizzaToEdit.FurtherDetails());
+            Footer();
+            Console.WriteLine("What ingredient(s) do you want to add to this pizza?");
+            var ingredientsToAdd = Console.ReadLine();
+
+        }
+
+        public static void EditPizza_RemoveIngredients(Pizza pizzaToEdit)
+        {
+
         }
 
         public static void SearchMenu()
@@ -140,39 +247,40 @@ namespace UML_II_Molle
         public static void CreatePizza()
         {
             Header();
-            Console.WriteLine("Creating new pizza; Type in all ingredients to add to pizza:");
+            Console.WriteLine("Creating new pizza:");
             Console.WriteLine("Ingredients:");
             if (_ingredients != null)
             {
-                List<Ingredient> tIngr = new List<Ingredient>();
-
-
                 for (int i = 0; i < _ingredients.Ingredients.Count; i++)
                 {
                     Console.WriteLine($"{i}:\t{_ingredients.Ingredients[i]}");
                 }
                 Footer();
-                var inp = Console.ReadLine();
+                Console.WriteLine("Input numbers on ingredients to add.\nSeperate with spaces!");
+
+                List<Ingredient> tIngr = new List<Ingredient>();
+                string? inp = Console.ReadLine();
                 if (inp != null)
                 {
-                    foreach (char c in inp)
+                    string[] inputSplit = inp.Split();
+                    int[] inputNumbers = Array.ConvertAll(inputSplit, int.Parse);
+
+                    foreach (int c in inputNumbers)
                     {
                         if (_ingredients.Ingredients[c] != null)
                         {
                             tIngr.Add(_ingredients.Ingredients[c]);
                         }
                     }
-                    CreatePizzaTwo(tIngr);
                 }
+                CreatePizza_NamePizza(tIngr);
             }
         }
 
 
-        public static void CreatePizzaTwo(List<Ingredient> ingrAdded)
+        public static void CreatePizza_NamePizza(List<Ingredient> ingrAdded)
         {
-            string tName;
-            int tPrice;
-            int parser;
+            
             Header();
             Console.WriteLine("Your pizza:");
             if (ingrAdded != null)
@@ -184,26 +292,83 @@ namespace UML_II_Molle
             }
             Footer();
             Console.WriteLine("Name this pizza:");
-            var pni = Console.ReadLine();
-            if (pni != null)
+            var pizzaNameInput = Console.ReadLine();
+            if (pizzaNameInput != null)
             {
-                tName = pni;
+                tempName = pizzaNameInput;
             }
             Console.WriteLine("Set the price:");
-            var pnp = Console.ReadLine();
-            if (pnp != null)
+            var pizzaPriceInput = Console.ReadLine();
+            if (pizzaPriceInput != null)
             {
-                if (Int32.TryParse(pnp, out parser))
+                if (Int32.TryParse(pizzaPriceInput, out parser))
                 {
-                    tPrice = parser;
+                    tempPrice = parser;
                 }
                 else Console.WriteLine("Invalid Price");
             }
-
             else
             {
-                Console.WriteLine("No ingredients in system.");
+                CustomError("Create new pizza;", "Price input is null");
                 Footer();
+            }
+            Header();
+            Console.WriteLine("New pizza:");
+            Console.WriteLine($"Name: {pizzaNameInput}\nPrice: {parser}");
+            if (ingrAdded != null)
+            {
+                foreach (Ingredient ing in ingrAdded)
+                {
+                    Console.WriteLine($"({ingrAdded.IndexOf(ing)}). {ing.Name}");
+                }
+            }
+            Console.WriteLine("\nConfirm pizza creation?");
+            Console.WriteLine("(1). Yes\n(2). No");
+            var confirmInput = Console.ReadLine();
+            if (confirmInput == "1")
+            {
+                if (pizzaNameInput != null && ingrAdded != null && tempName != null && _menu != null)
+                {
+                    Recipe createdRecipe = new Recipe(pizzaNameInput, ingrAdded);
+                    Pizza createdPizza = new Pizza(tempName, tempPrice, createdRecipe);
+                    _menu.AddPizza(createdPizza);
+                    StartScreen();
+                }
+            }
+            else if (confirmInput == "2")
+            {
+                StartScreen();
+            }
+            else return;
+        }
+
+        public static void ShowAndPickFromIngredientRepo()
+        {
+            Console.WriteLine("Ingredients:");
+            if (_ingredients != null)
+            {
+                for (int i = 0; i < _ingredients.Ingredients.Count; i++)
+                {
+                    Console.WriteLine($"{i}:\t{_ingredients.Ingredients[i]}");
+                }
+                Footer();
+                Console.WriteLine("Input numbers on ingredient(s) to add.\nSeperate with spaces!");
+
+                List<Ingredient> tIngr = new List<Ingredient>();
+                string? inp = Console.ReadLine();
+                if (inp != null)
+                {
+                    string[] inputSplit = inp.Split();
+                    int[] inputNumbers = Array.ConvertAll(inputSplit, int.Parse);
+
+                    foreach (int c in inputNumbers)
+                    {
+                        if (_ingredients.Ingredients[c] != null)
+                        {
+                            tIngr.Add(_ingredients.Ingredients[c]);
+                        }
+                    }
+                }
             }
         }
 
@@ -221,7 +386,7 @@ namespace UML_II_Molle
 
         public static void Footer()
         {
-            Console.WriteLine("\n================================");
+            Console.WriteLine("\n================================\n");
             //Console.WriteLine("            _....._\r");
             //Console.WriteLine("        _.:`.--|--.`:._\r");
             //Console.WriteLine("      .: .'\\o  | o /'. '.\r");
@@ -237,7 +402,12 @@ namespace UML_II_Molle
             //Console.WriteLine("Input:");
         }
 
-
+        public static void InputToReturn()
+        {
+            Console.WriteLine("ENTER to return to main menu");
+            Console.ReadLine();
+            StartScreen();
+        }
 
         public static void CustomError(string obj, string details)
         {
@@ -245,5 +415,8 @@ namespace UML_II_Molle
             Console.WriteLine($"\n!! {obj} {details} !!");
             Footer();
         }
+
+
+
     }
 }

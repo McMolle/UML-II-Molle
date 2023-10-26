@@ -10,7 +10,7 @@ namespace UML_II_Molle
     public class Pizza
     {
         public string PizzaName;
-        public DietType Diet;
+        public DietType Diet => _Recipe.Diet;
         public double Price;
         public Recipe _Recipe;
 
@@ -19,15 +19,30 @@ namespace UML_II_Molle
         {
             PizzaName = name;
             _Recipe = recipe;
-            Diet = recipe.Diet;
             Price = price;
-        }        
+        }
 
-
-
-        public void UpdatePizza()
+        public void EditPizza(string newName)
         {
+            PizzaName = newName;
+        }
 
+        public void EditPizza(int newPrice)
+        {
+            Price = newPrice;
+        }
+
+        public void AddIngredient(Ingredient ingredientToAdd)
+        {
+            _Recipe.Ingredients.Add(ingredientToAdd);
+        }
+
+        public void AddIngredients(List<Ingredient> ingredientsToAdd)
+        {
+            foreach (Ingredient ingredient in ingredientsToAdd)
+            {
+                _Recipe.Ingredients.Add(ingredient);
+            }
         }
 
         public string FurtherDetails()

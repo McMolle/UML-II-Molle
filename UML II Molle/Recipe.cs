@@ -12,7 +12,7 @@ namespace UML_II_Molle
         public string Name { get; set; }
         public List<Ingredient> Ingredients { get; set; }
 
-        public DietType Diet => CheckDiet();
+        public DietType Diet => CheckDiet(this.Ingredients);
 
         public Recipe(string name, List<Ingredient> ingredients)
         {
@@ -20,7 +20,7 @@ namespace UML_II_Molle
             Ingredients = ingredients;
         }
 
-        public DietType CheckDiet()
+        public DietType CheckDiet(List<Ingredient> ingredientList)
         {
             int vgC = 0;
             int vC = 0;
