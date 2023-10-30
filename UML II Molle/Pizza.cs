@@ -32,11 +32,6 @@ namespace UML_II_Molle
             Price = newPrice;
         }
 
-        public void AddIngredient(Ingredient ingredientToAdd)
-        {
-            _Recipe.Ingredients.Add(ingredientToAdd);
-        }
-
         public void AddIngredients(List<Ingredient> ingredientsToAdd)
         {
             foreach (Ingredient ingredient in ingredientsToAdd)
@@ -44,6 +39,15 @@ namespace UML_II_Molle
                 _Recipe.Ingredients.Add(ingredient);
             }
         }
+        public void RemoveIngredients(List<Ingredient> ingredientsToRemove)
+        {
+            foreach (Ingredient ingredient in ingredientsToRemove)
+            {
+                _Recipe.Ingredients.Remove(ingredient);
+            }
+        }
+
+
 
         public string FurtherDetails()
         {

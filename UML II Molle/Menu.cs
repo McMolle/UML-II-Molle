@@ -22,6 +22,10 @@ namespace UML_II_Molle
         {
             MenuPizzas.Add(px);
         }
+        public void RemovePizza(Pizza pizza)
+        {
+            MenuPizzas.Remove(pizza);
+        }
 
         public string SearchMenu(string input)
         {

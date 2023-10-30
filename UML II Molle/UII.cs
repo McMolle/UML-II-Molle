@@ -33,6 +33,7 @@ namespace UML_II_Molle
             Header();
             Console.WriteLine("\n(1). Show Menu\n(2). Search Menu\n(3). Create new Pizza\n");
             Footer();
+            Console.Write(">");
             string? inp = Console.ReadLine();
             if (inp != null)
             {
@@ -74,9 +75,10 @@ namespace UML_II_Molle
                     Console.WriteLine($"{i}. {pizzas[i]}");
 
                 }
-                Console.WriteLine("\n\n(1). Return to main menu\n(2). Edit Pizza \n(3). Create new Pizza\n(4). Delete a pizza\n(5). Expand details");
+                Console.WriteLine("\n- - - - - - - - - - - - - - -");
+                Console.WriteLine("\n(1). Return to main menu\n(2). Edit Pizza \n(3). Create new Pizza\n(4). Delete a pizza\n(5). Expand details");
                 Footer();
-
+                Console.Write(">");
                 var inp = Console.ReadLine();
                 if (inp != null) {
                     switch (inp) {
@@ -87,8 +89,10 @@ namespace UML_II_Molle
                             EditPizza_ChoosePizza();
                             break;
                         case "3":
+                            CreatePizza();
                             break;
                         case "4":
+                            RemovePizza();
                             break;
                         case "5":
                             Header();
@@ -107,6 +111,35 @@ namespace UML_II_Molle
             else { CustomError("Menu:", "Can't show menu - Menu is null."); }
         }
 
+        public static void RemovePizza()
+        {
+            Header();
+            Console.WriteLine("Menu: ");
+            if (_menu == null) { CustomError("Delete pizza;", "Trying to show _menu so user can pick a pizza to delete, but _menu is null."); }
+            else
+            {
+                for (int i = 0; i < _menu.AllPizzas.Count; i++)
+                {
+                    Console.WriteLine($"{i}. {_menu.AllPizzas[i]}");
+
+                }
+                Console.WriteLine("- - - - - - - - - - - - - - -");
+                Console.WriteLine("Choose pizza to delete");
+                Console.Write(">");
+                var inp = Console.ReadLine();
+                if (Int32.TryParse(inp, out parser))
+                {
+                    if (_menu.AllPizzas[parser] == null) { CustomError("Choose pizza to delete;", "Chosen pizza is null"); }
+                    else
+                    {
+                        _menu.RemovePizza(_menu.AllPizzas[parser]);
+                        Console.WriteLine("Pizza removed successfully.");
+                        InputToReturn();
+                    }
+                }
+            }
+        }
+
         public static void EditPizza_ChoosePizza()
         {
             if (_menu == null) { return; }
@@ -123,6 +156,7 @@ namespace UML_II_Molle
                 }
                 Footer();
                 Console.WriteLine("\nWhat pizza do you wish to edit?");
+                Console.Write(">");
                 var inp = Console.ReadLine();
                 if (Int32.TryParse(inp, out parser)) {
                     if (tempPizzaDictionary.ContainsKey(parser))
@@ -136,7 +170,7 @@ namespace UML_II_Molle
         public static void EditPizza_ChooseProperty(Pizza pizzaToEdit)
         {
             Header();
-            Console.WriteLine(pizzaToEdit.FurtherDetails());
+            Console.WriteLine($"{pizzaToEdit}\n{pizzaToEdit.FurtherDetails()}");
             Console.WriteLine("\n(1). Change pizza name\n(2). Change pizza price\n(3). Add ingredients\n(4). Remove ingredients");
             Footer();
             var editChoiceInput = Console.ReadLine();
@@ -158,18 +192,20 @@ namespace UML_II_Molle
                     return;
             }
         }
-
+        
         public static void EditPizzaName(Pizza pizzaToEdit)
         {
             Header();
-            Console.WriteLine(pizzaToEdit.FurtherDetails());
+            Console.WriteLine($"{pizzaToEdit}\n{pizzaToEdit.FurtherDetails()}");
             Footer();
             Console.WriteLine("What do you want to call this pizza?");
+            Console.Write(">");
             var newNameInp = Console.ReadLine();
             if (newNameInp != null)
             {
                 pizzaToEdit.EditPizza(newNameInp);
-                StartScreen();
+                Console.WriteLine("Name changed successfully");
+                InputToReturn();
             }
             else
             {
@@ -180,14 +216,16 @@ namespace UML_II_Molle
         public static void EditPizzaPrice(Pizza pizzaToEdit)
         {
             Header();
-            Console.WriteLine(pizzaToEdit.FurtherDetails());
+            Console.WriteLine($"{pizzaToEdit}\n{pizzaToEdit.FurtherDetails()}");
             Footer();
             Console.WriteLine("What do you want this pizza to cost?");
+            Console.Write(">");
             var newPriceInp = Console.ReadLine();
             if (newPriceInp != null && Int32.TryParse(newPriceInp, out parser))
             {
                 pizzaToEdit.EditPizza(parser);
-                StartScreen();
+                Console.WriteLine("Price changed successfully");
+                InputToReturn();
             }
             else
             {
@@ -198,21 +236,83 @@ namespace UML_II_Molle
         public static void EditPizza_AddIngredients(Pizza pizzaToEdit)
         {
             Header();
-            Console.WriteLine(pizzaToEdit.FurtherDetails());
-            Footer();
-            Console.WriteLine("What ingredient(s) do you want to add to this pizza?");
-            var ingredientsToAdd = Console.ReadLine();
+            Console.WriteLine("Chosen Pizza:");
+            Console.WriteLine($"{pizzaToEdit}\n{pizzaToEdit.FurtherDetails()}");
+            Console.WriteLine("- - - - - - - - - - - - - - -");
+            Console.WriteLine("All ingredients in system:");
+            if (_ingredients == null) { CustomError("Editpizza Add Ingredients;", "Ingredient repository in system is null"); }
+            else
+            {
+                for (int i = 0; i < _ingredients.Ingredients.Count; i++)
+                {
+                    Console.WriteLine($"{i}:\t{_ingredients.Ingredients[i]}");
+                }
+                Footer();
+                Console.WriteLine("Input numbers on ingredient(s) to add.\nSeperate with spaces!");
 
+                List<Ingredient> chosenIngredients = new List<Ingredient>();
+                Console.Write(">");
+                string? inp = Console.ReadLine();
+                if (inp == null) { CustomError("Choose ingredients to add to pizza during edit pizza", "User input/chosen ingredients is null"); }
+                else
+                {
+                    string[] inputSplit = inp.Split();
+                    int[] inputNumbers = Array.ConvertAll(inputSplit, int.Parse);
+
+                    foreach (int c in inputNumbers)
+                    {
+                        if (_ingredients.Ingredients[c] != null)
+                        {
+                            chosenIngredients.Add(_ingredients.Ingredients[c]);
+                        }
+                    }
+                    pizzaToEdit.AddIngredients(chosenIngredients);
+                }
+                Console.WriteLine("Ingredient(s) added successfully");
+                InputToReturn();
+            }
+                
         }
 
         public static void EditPizza_RemoveIngredients(Pizza pizzaToEdit)
         {
+            Header();
+            Console.WriteLine("Chosen Pizza:");
+            Console.WriteLine($"{pizzaToEdit}\n{pizzaToEdit.FurtherDetails()}");
+            for (int i = 0; i < pizzaToEdit._Recipe.Ingredients.Count; i++)
+            {
+                Console.WriteLine($"{i}:\t{pizzaToEdit._Recipe.Ingredients[i]}");
+            }
+            Console.WriteLine("- - - - - - - - - - - - - - -");
+            Console.WriteLine("Input numbers on ingredient(s) to remove.\nSeperate with spaces!");
 
+            List<Ingredient> chosenIngredients = new List<Ingredient>();
+            Console.Write(">");
+            string? inp = Console.ReadLine();
+            if (inp == null) { CustomError("Choose ingredients to remove from pizza during edit pizza", "User input/chosen ingredients is null"); }
+            else
+            {
+                string[] inputSplit = inp.Split();
+                int[] inputNumbers = Array.ConvertAll(inputSplit, int.Parse);
+
+                foreach (int c in inputNumbers)
+                {
+                    if (pizzaToEdit._Recipe.Ingredients[c] != null)
+                    {
+                        chosenIngredients.Add(pizzaToEdit._Recipe.Ingredients[c]);
+                    }
+                }
+                pizzaToEdit.RemoveIngredients(chosenIngredients);
+            }
+            Console.WriteLine("Ingredient(s) removed successfully");
+            InputToReturn();
         }
+    
 
         public static void SearchMenu()
         {
             Console.WriteLine("Search Menu:\n");
+            Console.Write(">");
             var inp = Console.ReadLine();
             string results = string.Empty;
             if (inp != null)
@@ -240,7 +340,15 @@ namespace UML_II_Molle
         public static void SearchedMenuResults(string r)
         {
             Header();
-            Console.WriteLine(r);
+            if (r == string.Empty)
+            {
+                Console.WriteLine("No search results.");
+                InputToReturn();
+            }
+            else {
+                Console.WriteLine(r);
+            }
+            InputToReturn();
             Footer();
         }
 
